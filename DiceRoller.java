@@ -22,7 +22,8 @@ public class DiceRoller {
         JPanel panel = new JPanel();
         JPanel panel2 = new JPanel();
         JPanel panel3 = new JPanel();
-        frame.setLayout(new GridLayout(1,2));
+        JPanel panel4 = new JPanel();
+        frame.setLayout(new GridLayout(2,2));
 
         //Text Field where number of rolled dice is entered
         //Does Not need an action listener here
@@ -51,16 +52,12 @@ public class DiceRoller {
         JRadioButton d12 = new JRadioButton("D12");
         dieAvailable.add(d12);
 
-        JRadioButton d20 = new JRadioButton("D20");
-        dieAvailable.add(d20);
-
         //Add buttons to panel
         panel2.add(d4);
         panel2.add(d6);
         panel2.add(d8);
         panel2.add(d10);
         panel2.add(d12);
-        panel2.add(d20);
 
         //Area where result is displayed
         JTextField results = new JTextField("Results",7);
@@ -96,10 +93,6 @@ public class DiceRoller {
                         int total = diceRoller(dice,12);
                         results.setText(""+total);
                     }
-                    else{
-                        int total = diceRoller(dice,20);
-                        results.setText(""+total);
-                    }
                 }
                 else{
                     results.setText("Invalid Number of Dice");
@@ -108,11 +101,46 @@ public class DiceRoller {
         });
         panel3.add(rollButton);
 
+        //Add Advantage and Disadvantage buttons
+        JButton d20 = new JButton("D20");
+        JButton Advantage = new JButton("Advantage");
+        JButton Disadvantage = new JButton("Disadvantage");
+
+        d20.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int roll = diceRoller(1,20);
+                results.setText("" + roll);
+            }
+        });
+
+        Advantage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int roll = rollWithAdvantage();
+                results.setText("" + roll);
+            }
+        });
+
+
+        Disadvantage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int roll = rollWithDisadvantage();
+                results.setText("" + roll);
+            }
+        });
+
+        panel4.add(d20);
+        panel4.add(Advantage);
+        panel4.add(Disadvantage);
+
         //Add panel to frame and set up display
         frame.add(panel);
         frame.add(panel2);
+        frame.add(panel4);
         frame.add(panel3);
-        frame.setSize(360,150);
+        frame.setSize(500,250);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
@@ -134,5 +162,29 @@ public class DiceRoller {
             rolled = num.nextInt(((max - min) + 1) + min);
         }
         return rolled;
+    }
+
+    private static int rollWithAdvantage(){
+        int die1 = getRandomNumber(1,20);
+        int die2 = getRandomNumber(1,20);
+
+        if(die1 >= die2){
+            return die1;
+        }
+        else{
+            return die2;
+        }
+    }
+
+    private static int rollWithDisadvantage(){
+        int die1 = getRandomNumber(1,20);
+        int die2 = getRandomNumber(1,20);
+
+        if(die1 <= die2){
+            return die1;
+        }
+        else{
+            return die2;
+        }
     }
 }
